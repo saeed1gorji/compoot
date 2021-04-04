@@ -1,0 +1,10 @@
+*/dotfiles/*
+*/config/*
+*/projects/*
+*/packages/*
+*/input/*
+*/output/*
+*ssh-keys/*
+*.ovpn
+*.swp
+TODO

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+username=/etc/openvpn/username
+config=/etc/openvpn/user.ovpn
+if [ -z $1 ]; then
+    # Ask for password
+    openvpn --config $config --auth-user-pass $username #--up /etc/openvpn/user-up.sh
+else
+    # Take password from first argument and append to username file.
+    tmpdir=$(mktemp -d)
+    userpass=$tmpdir/username
+    cat $username > $userpass
+    echo $1 >> $userpass
+    chmod go-rwx $userpass
+
+    log_file=/proc/1/fd/1 # Docker 'logs' only sees pid 1 outputs. 'fd/1' is STDOUT.
+
+    openvpn --config $config --auth-user-pass $userpass \
+        --daemon --log-append $log_file #--up /etc/openvpn/user-up.sh
+    rm -rf $tmpdir
+fi

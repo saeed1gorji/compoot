@@ -1,0 +1,90 @@
+#version: "3.9"
+
+services:
+    develop:
+        container_name: ${INSTANCE_NAME}-develop
+        image: ${INSTANCE_NAME}-develop
+        build:
+            context: ./$INSTANCE_NAME
+            dockerfile: Dockerfile
+            target: develop
+            args:
+                TZ: $TZ
+            network: host
+        privileged: true
+        network_mode: service:ovpn
+        volumes:
+            - /dev:/dev
+            - ./$INSTANCE_NAME/projects:/root/projects
+            - ./$INSTANCE_NAME/input:/shared/input
+            - ./$INSTANCE_NAME/output:/shared/output
+            - ./$INSTANCE_NAME/scripts:/shared/scripts
+            - ./$INSTANCE_NAME/dotfiles:/shared/dotfiles
+            - ./$INSTANCE_NAME/apt-config:/shared/apt-config
+            - ./$INSTANCE_NAME/config:/shared/config
+            - ./ssh-keys:/shared/ssh-keys
+        tmpfs:
+          - /tmp
+          - /run
+          - /run/lock
+        # Include 'tini'
+        init: true
+        # Keep alive: Wait for attach, restart on exit
+        restart: unless-stopped
+        stdin_open: true
+        tty: true
+
+    test:
+        container_name: ${INSTANCE_NAME}-test 
+        image: ${INSTANCE_NAME}-test
+        build:
+            context: ./$INSTANCE_NAME
+            dockerfile: Dockerfile
+            target: test
+            args:
+                SB_SOURCE_DIR: /root/example-repo/
+                TZ: $TZ
+            network: host
+        environment:
+            - CUSTOM_CMD=$TEST_CUSTOM_CMD
+        privileged: true
+        network_mode: service:ovpn
+        volumes:
+            - /dev:/dev
+            - ./$INSTANCE_NAME/input:/shared/input
+            - ./$INSTANCE_NAME/output:/shared/output
+            - ./$INSTANCE_NAME/scripts:/shared/scripts
+            - ./$INSTANCE_NAME/config:/shared/config
+            - ./$INSTANCE_NAME/packages:/shared/packages
+        tmpfs:
+            - /tmp
+            - /run
+            - /run/lock
+        stdin_open: false
+        tty: false
+
+    ovpn:
+        container_name: ovpn
+        hostname: ovpn
+        image: ovpn 
+        build:
+            context: ./ovpn
+            dockerfile: Dockerfile
+            network: host
+        volumes:
+            - ./ovpn/scripts:/shared/scripts
+            - ./ssh-keys:/shared/ssh-keys
+        devices:
+            - "/dev/net/tun"
+        ports:
+            # TODO: define port numbers in .env
+            - "2223:23"
+            - "2222:22" #develop ssh
+        cap_add:
+            - NET_ADMIN
+        # Include 'tini'
+        init: true
+        # Keep alive
+        restart: always
+        stdin_open: true
+        tty: true
