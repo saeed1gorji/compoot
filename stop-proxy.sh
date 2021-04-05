@@ -2,6 +2,8 @@
 
 set -e
 
+pushd $( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd ) >/dev/null
+
 proxy_service=ovpn
 
 socks_port=2221
@@ -24,3 +26,5 @@ elif [ "restart" = "$1" ]; then
 else
     sudo docker-compose stop --timeout=2 $proxy_service
 fi
+
+popd >/dev/null

@@ -2,6 +2,8 @@
 
 set -e
 
+pushd $( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd ) >/dev/null
+
 socks_port=2221
 proxy_ssh_port=2223
 get_tunnel_pid ()
@@ -58,3 +60,5 @@ echo " *** ---->>> Wait for connection success message."
 echo " *** ---->>> Use Ctrl+C to escape the log messages."
 echo -e "\n\n\n"
 sudo docker logs --since "0s" --follow $proxy_service
+
+popd >/dev/null
