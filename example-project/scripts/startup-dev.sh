@@ -9,7 +9,7 @@ chmod ug+x $DIR/loop-setup.sh
 $DIR/loop-setup.sh $INPUT_DIR
 
 # Add SSH key (if no-password authentication is required)
-key_name=sbssh-key
+key_name=ssh-key
 mkdir ~/.ssh/
 chmod 700 ~/.ssh
 touch ~/.ssh/authorized_keys
