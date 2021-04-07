@@ -61,7 +61,6 @@ FROM base as develop
 WORKDIR /root/
 ARG APT_INSTALL_OPTS
 ARG DEBIAN_FRONTEND
-ARG PROJECT_NAME
 
 # Install needed tools
 COPY ./deb-development /pkg-list
