@@ -10,8 +10,8 @@ ssh-keygen -t rsa -b 2048 -N ""
        - The proxy server accessible at $pxuser@$pxip:$pxport using ssh.
        - The target vm accessible at $vmuser@$vmip:$vmport through the proxy-
          -server and using ssh.
-   Using the three afformentioned pairs of users, ips, and ports, we can issue
-   the following command to add our host to the target vm ssh:
+   Using the three afformentioned users, ips, and ports, we can issue the
+   following command to add our host to the target vm ssh:
     ssh-copy-id -f -o ProxyCommand="ssh -W %h:%p $pxuser@$pxip -p $pxport" -o Port=$vmport $vmuser@$vmip
 
    example:
