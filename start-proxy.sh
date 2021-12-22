@@ -53,7 +53,7 @@ final ()
     echo -e "\n"
 }
 
-trap final SIGINT
+trap 'final' EXIT
 stty -echoctl
 echo -e "\n\n\n"
 echo " *** ---->>> Wait for connection success message."
