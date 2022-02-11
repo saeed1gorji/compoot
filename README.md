@@ -1,3 +1,5 @@
+# Compoot
+
 This project is a sample collection of scripts and configuration files that
 hopefully will help setting up a remote workspace for developers. It uses docker
 and docker-compose files along with a bunch of bash scripts to achieve that.
@@ -18,19 +20,19 @@ test environments are based on ubuntu linux.
 
 If you do not want to bulid one of the containers, skip the respective "Prepare..." step.
 
- --- Prepare proxy container ---
-1- Generate required SSH keys:
+## Prepare proxy container
+1. Generate required SSH keys:
      ./ssh-key-manger.sh generate
 More: This script adds a new key pair for SSH authentication and stores the keys
 in the ssh-keys directory (which is later shared with the target container).
 
-2- Edit the following accordingly:
+2. Edit the following accordingly:
      proxy/openvpn/username
 
-3- Add your open vpn config (.ovpn) here:
+3. Add your open vpn config (.ovpn) here:
      proxy/openvpn/user.ovpn
 
- --- Prepare develop/test container ---
+## Prepare develop/test container
 Several directories are mounted into these containers, configured as volumes in
 docker compose file. Most important volumes are: 
   projects:   Source files that need to be accesses in the container (for develop).
@@ -47,29 +49,30 @@ the container's contents or behaviors without rebuilding the image everytime you
 need to make some minor changes.
 To make sure your desired container works as expected, check the following steps:
  
-1- Edit ".env" file and set a proper name as "INSTANCE_NAME". This is used for
+1. Edit ".env" file and set a proper name as "INSTANCE_NAME". This is used for
    naming the image and the containers, including the name of the respective
    volumes data source directory.
 
-2- Place the data that is needed by your project in "$INSTANCE_NAME/input" directory.
+2. Place the data that is needed by your project in "$INSTANCE_NAME/input" directory.
 
-3- [Optional] Change "projects" volume in docker compose file if you keep your
+3. [Optional] Change "projects" volume in docker compose file if you keep your
    project files somewhere other than "$INSTANCE_NAME/projects". This usally is
    relevant if you plan to run a container for develop.
 
-4- [Optional] Add your needed dotconfig files to "$INSTANCE_NAME/dotfiles" (.gitconfig, .vimrc, etc.).
+4. [Optional] Add your needed dotconfig files to "$INSTANCE_NAME/dotfiles" (.gitconfig, .vimrc, etc.).
 
-5- [Optional] Modify the startup scripts to change startup behavior of the container or
+5. [Optional] Modify the startup scripts to change startup behavior of the container or
    add other operations in form of bash commands.
    Develop container runs "$INSTANCE_NAME/scripts/startup-dev.sh".
    Test container runs "$INSTANCE_NAME/scripts/startup-test.sh".
 
-6- [Optional] To enable SSH key authentication for develop, uncomment related part
+6. [Optional] To enable SSH key authentication for develop, uncomment related part
    in "$INSTANCE_NAME/scripts/startup-dev.sh" and the "ssh-keys" volume in
    docker compose file (or add it if doesn't exist).
 
-==============================================================================
- --- How-to guides collection ---
+---
+
+ ## How-to guides collection
 - Common scenario for vpn connection (including ssh tunnel):
   1:
     ./start-proxy.sh [YOUR_VPN_PASSWORD]
@@ -187,7 +190,8 @@ To make sure your desired container works as expected, check the following steps
 
 
 TODO:
-  Create list of most important parameters and how to change them.
-  Parameterize port numbers via .env file.
-  Avoid plain root passwords for example-project
-  Check if all args are correctly passed to example-project dockerfile.
+
+  - [ ] Create list of most important parameters and how to change them.
+  - [ ] Parameterize port numbers via .env file.
+  - [ ] Avoid plain root passwords for example-project
+  - [ ] Check if all args are correctly passed to example-project dockerfile.
